@@ -1,0 +1,1 @@
+sed 's/\./\.\n/g' ../consignas/breve_historia.txt > ../evidencia/breve_historia_1a.txt
