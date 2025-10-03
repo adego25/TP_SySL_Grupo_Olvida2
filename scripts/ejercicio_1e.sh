@@ -1,2 +1,2 @@
 echo "Líneas que empiezan con 'El' y terminan con '.'"
-grep '^El.*\.$' ../consignas/breve_historia.txt
+grep '^[[:space:]]*El.*\.[[:space:]]*$' ../consignas/breve_historia.txt
