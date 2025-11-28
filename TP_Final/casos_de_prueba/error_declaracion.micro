@@ -1,0 +1,4 @@
+inicio
+  // Esto debe fallar
+  a := 5; 
+fin

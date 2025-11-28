@@ -1,0 +1,6 @@
+inicio
+  int num;
+  string s;
+  s := "texto";
+  num := s; // Error de tipos
+fin

@@ -1,0 +1,4 @@
+inicio
+  const int MAX := 100;
+  MAX := 50; // Error al asignar
+fin

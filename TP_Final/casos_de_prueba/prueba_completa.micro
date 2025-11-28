@@ -1,0 +1,16 @@
+
+inicio
+  // Prueba de variables y operaciones
+  int a;
+  int b;
+  string texto;
+  a := 10;
+  b := 20;
+  texto := "Hola UTN";
+  escribir(texto);
+  escribir(a + b);
+
+  // Prueba de Constantes
+  const int PI := 314;
+  escribir(PI + a);
+fin
