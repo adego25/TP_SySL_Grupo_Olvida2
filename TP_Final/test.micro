@@ -1,0 +1,14 @@
+inicio
+    escribir ("hola mundo");
+    escribir ("testing + testing");
+    string a;
+    string b;
+    a := "sarasa-";
+    b := "asdasd";
+    escribir (a b);
+    int x;
+    int z;
+    x := 2;
+    z := 3;
+    x := 3 + (5 -2); 
+fin

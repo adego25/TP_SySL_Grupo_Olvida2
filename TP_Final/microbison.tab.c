@@ -77,8 +77,29 @@ extern int yylex();
 extern int yyparse();
 void yyerror(const char *s);
 
+typedef struct {
+    char nombre[64];
+    char valor[512];
+} Var;
 
-#line 82 "microbison.tab.c"
+Var tabla[100];
+int cantVars = 0;
+
+Var* buscarVar(char* n){
+    for(int i=0;i<cantVars;i++){
+        if(strcmp(tabla[i].nombre, n)==0) return &tabla[i];
+    }
+    return NULL;
+}
+
+Var* crearVar(char* n){
+    Var* v = &tabla[cantVars++];
+    strcpy(v->nombre, n);
+    v->valor[0] = 0;
+    return v;
+}
+
+#line 103 "microbison.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -132,7 +153,7 @@ enum yysymbol_kind_t
   YYSYMBOL_listaSentencias = 23,           /* listaSentencias  */
   YYSYMBOL_sentencia = 24,                 /* sentencia  */
   YYSYMBOL_listaIdentificadores = 25,      /* listaIdentificadores  */
-  YYSYMBOL_listaExpresiones = 26,          /* listaExpresiones  */
+  YYSYMBOL_strexpr = 26,                   /* strexpr  */
   YYSYMBOL_expresion = 27,                 /* expresion  */
   YYSYMBOL_primaria = 28                   /* primaria  */
 };
@@ -462,16 +483,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  12
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   55
+#define YYLAST   81
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  20
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  9
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  21
+#define YYNRULES  25
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  51
+#define YYNSTATES  61
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   274
@@ -520,11 +541,11 @@ static const yytype_int8 yytranslate[] =
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_int8 yyrline[] =
+static const yytype_uint8 yyrline[] =
 {
-       0,    36,    36,    41,    45,    46,    50,    52,    54,    56,
-      58,    60,    65,    66,    70,    71,    75,    76,    77,    81,
-      82,    83
+       0,    58,    58,    63,    67,    68,    73,    81,    90,    93,
+     107,   114,   121,   131,   132,   136,   139,   142,   152,   160,
+     169,   170,   171,   175,   182,   185
 };
 #endif
 
@@ -544,8 +565,7 @@ static const char *const yytname[] =
   "TIPO_STRING", "CONST", "INICIO", "FIN", "LEER", "ESCRIBIR", "ID", "NUM",
   "STRING_LITERAL", "ASIGN", "SUMA", "RESTA", "PYC", "COMA", "PAR_I",
   "PAR_D", "$accept", "objetivo", "programa", "listaSentencias",
-  "sentencia", "listaIdentificadores", "listaExpresiones", "expresion",
-  "primaria", YY_NULLPTR
+  "sentencia", "listaIdentificadores", "strexpr", "expresion", "primaria", YY_NULLPTR
 };
 
 static const char *
@@ -560,7 +580,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
 
-#define YYTABLE_NINF (-1)
+#define YYTABLE_NINF (-24)
 
 #define yytable_value_is_error(Yyn) \
   0
@@ -569,11 +589,12 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-       8,     3,    30,   -19,    29,    31,    37,    24,    25,    32,
-      13,   -19,   -19,    28,    33,    36,    38,    -9,    -9,   -19,
-     -19,   -19,   -19,    34,   -19,    14,   -19,   -19,    -9,    15,
-      21,   -19,   -11,    -9,    40,    35,    10,    -9,    39,    -9,
-      -9,   -19,    12,   -19,   -19,   -19,    21,   -19,   -19,   -19,
+       1,    49,    12,   -19,    19,    24,    63,     4,    50,    54,
+      41,   -19,   -19,    53,    55,    60,    62,    25,    13,   -19,
+     -19,   -19,   -19,    61,   -19,   -14,    57,   -19,   -19,    25,
+      -4,    27,   -19,    13,    20,    -5,   -19,    29,    66,    64,
+      58,     8,    65,    25,    46,   -19,    29,    29,   -19,   -19,
+      29,    48,   -19,   -19,   -19,   -19,   -19,   -19,   -19,   -19,
      -19
 };
 
@@ -584,22 +605,23 @@ static const yytype_int8 yydefact[] =
 {
        0,     0,     0,     2,     0,     0,     0,     0,     0,     0,
        0,     4,     1,     0,     0,     0,     0,     0,     0,     3,
-       5,     9,    10,     0,    12,     0,    19,    20,     0,     0,
-      14,    16,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     6,     0,    13,     7,    21,    15,     8,    17,    18,
-      11
+       5,    10,    11,     0,    13,     0,     0,    19,    15,     0,
+       0,    19,    24,     0,     0,     0,    20,     0,     0,     0,
+       0,     0,     0,    17,     0,     7,     0,     0,     6,    23,
+       0,     0,    14,     8,    18,    16,     9,    25,    21,    22,
+      12
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -19,   -19,   -19,   -19,    42,   -19,   -19,   -18,    -2
+     -19,   -19,   -19,   -19,    68,   -19,   -16,   -18,     9
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     2,     3,    10,    11,    25,    29,    30,    31
+       0,     2,     3,    10,    11,    25,    43,    44,    36
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -607,22 +629,28 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      32,    26,    27,    39,    40,    41,     4,     5,     6,    28,
-      36,     7,     8,     9,     1,    42,     4,     5,     6,    46,
-      19,     7,     8,     9,    39,    40,    39,    40,    50,    45,
-      12,    34,    37,    35,    38,    39,    40,    48,    49,    13,
-      15,    14,    16,    17,    21,    18,    23,    33,    24,    22,
-      43,    44,    20,     0,     0,    47
+      35,    30,    34,    38,    26,    39,    27,     1,    28,    46,
+      47,    48,    12,    41,    29,    42,    26,    41,    27,    51,
+      28,    26,    16,    31,    32,    28,    29,    55,    26,    13,
+      27,    33,    28,    26,    14,    27,    45,    28,    29,    49,
+      32,   -23,   -23,    29,     4,     5,     6,    50,    19,     7,
+       8,     9,     4,     5,     6,    58,    59,     7,     8,     9,
+      46,    47,    46,    47,    60,    57,    15,    18,    17,    21,
+      23,    22,    24,     0,    37,    40,    52,    54,    20,     0,
+      53,    56
 };
 
 static const yytype_int8 yycheck[] =
 {
-      18,    10,    11,    14,    15,    16,     3,     4,     5,    18,
-      28,     8,     9,    10,     6,    33,     3,     4,     5,    37,
-       7,     8,     9,    10,    14,    15,    14,    15,    16,    19,
-       0,    17,    17,    19,    19,    14,    15,    39,    40,    10,
-       3,    10,    18,    18,    16,    13,    10,    13,    10,    16,
-      10,    16,    10,    -1,    -1,    16
+      18,    17,    18,    17,     8,    19,    10,     6,    12,    14,
+      15,    16,     0,    29,    18,    19,     8,    33,    10,    37,
+      12,     8,    18,    10,    11,    12,    18,    19,     8,    10,
+      10,    18,    12,     8,    10,    10,    16,    12,    18,    10,
+      11,    14,    15,    18,     3,     4,     5,    18,     7,     8,
+       9,    10,     3,     4,     5,    46,    47,     8,     9,    10,
+      14,    15,    14,    15,    16,    19,     3,    13,    18,    16,
+      10,    16,    10,    -1,    13,    18,    10,    19,    10,    -1,
+      16,    16
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
@@ -631,9 +659,10 @@ static const yytype_int8 yystos[] =
 {
        0,     6,    21,    22,     3,     4,     5,     8,     9,    10,
       23,    24,     0,    10,    10,     3,    18,    18,    13,     7,
-      24,    16,    16,    10,    10,    25,    10,    11,    18,    26,
-      27,    28,    27,    13,    17,    19,    27,    17,    19,    14,
-      15,    16,    27,    10,    16,    19,    27,    16,    28,    28,
+      24,    16,    16,    10,    10,    25,     8,    10,    12,    18,
+      26,    10,    11,    18,    26,    27,    28,    13,    17,    19,
+      18,    26,    19,    26,    27,    16,    14,    15,    16,    10,
+      18,    27,    10,    16,    19,    19,    16,    19,    28,    28,
       16
 };
 
@@ -641,16 +670,16 @@ static const yytype_int8 yystos[] =
 static const yytype_int8 yyr1[] =
 {
        0,    20,    21,    22,    23,    23,    24,    24,    24,    24,
-      24,    24,    25,    25,    26,    26,    27,    27,    27,    28,
-      28,    28
+      24,    24,    24,    25,    25,    26,    26,    26,    26,    26,
+      27,    27,    27,    28,    28,    28
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     1,     3,     1,     2,     4,     5,     5,     3,
-       3,     6,     1,     3,     1,     3,     1,     3,     3,     1,
-       1,     3
+       0,     2,     1,     3,     1,     2,     4,     4,     5,     5,
+       3,     3,     6,     1,     3,     1,     3,     2,     3,     1,
+       1,     3,     3,     1,     1,     3
 };
 
 
@@ -1114,79 +1143,170 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* objetivo: programa  */
-#line 37 "microbison.y"
-      { printf("ok\n"); }
-#line 1120 "microbison.tab.c"
+#line 59 "microbison.y"
+        { printf("ok\n"); }
+#line 1149 "microbison.tab.c"
     break;
 
   case 6: /* sentencia: ID ASIGN expresion PYC  */
-#line 51 "microbison.y"
-        { printf("asign: %s = %d\n", (yyvsp[-3].str), (yyvsp[-1].num)); }
-#line 1126 "microbison.tab.c"
+#line 74 "microbison.y"
+        { 
+            Var* v = buscarVar((yyvsp[-3].str));
+            if (!v) v = crearVar((yyvsp[-3].str));
+            sprintf(v->valor, "%d", (yyvsp[-1].num));
+            printf("asign num: %s = %s\n", (yyvsp[-3].str), v->valor);
+        }
+#line 1160 "microbison.tab.c"
     break;
 
-  case 7: /* sentencia: LEER PAR_I listaIdentificadores PAR_D PYC  */
-#line 53 "microbison.y"
-        { printf("leer\n"); }
-#line 1132 "microbison.tab.c"
-    break;
-
-  case 8: /* sentencia: ESCRIBIR PAR_I listaExpresiones PAR_D PYC  */
-#line 55 "microbison.y"
-        { printf("escribir\n"); }
-#line 1138 "microbison.tab.c"
-    break;
-
-  case 9: /* sentencia: TIPO_INT ID PYC  */
-#line 57 "microbison.y"
-        { printf("decl int %s\n", (yyvsp[-1].str)); }
-#line 1144 "microbison.tab.c"
-    break;
-
-  case 10: /* sentencia: TIPO_STRING ID PYC  */
-#line 59 "microbison.y"
-        { printf("decl string %s\n", (yyvsp[-1].str)); }
-#line 1150 "microbison.tab.c"
-    break;
-
-  case 11: /* sentencia: CONST TIPO_INT ID ASIGN expresion PYC  */
-#line 61 "microbison.y"
-        { printf("const int %s = %d\n", (yyvsp[-3].str), (yyvsp[-1].num)); }
-#line 1156 "microbison.tab.c"
-    break;
-
-  case 17: /* expresion: expresion SUMA primaria  */
-#line 76 "microbison.y"
-                                { (yyval.num) = (yyvsp[-2].num) + (yyvsp[0].num); }
-#line 1162 "microbison.tab.c"
-    break;
-
-  case 18: /* expresion: expresion RESTA primaria  */
-#line 77 "microbison.y"
-                                { (yyval.num) = (yyvsp[-2].num) - (yyvsp[0].num); }
-#line 1168 "microbison.tab.c"
-    break;
-
-  case 19: /* primaria: ID  */
-#line 81 "microbison.y"
-                       { /*buscar en tabla (por ahora 0) */ (yyval.num) = 0; }
-#line 1174 "microbison.tab.c"
-    break;
-
-  case 20: /* primaria: NUM  */
+  case 7: /* sentencia: ID ASIGN strexpr PYC  */
 #line 82 "microbison.y"
-                       { (yyval.num) = (yyvsp[0].num); }
-#line 1180 "microbison.tab.c"
+        {
+            Var* v = buscarVar((yyvsp[-3].str));
+            if (!v) v = crearVar((yyvsp[-3].str));
+            strcpy(v->valor, (yyvsp[-1].str));
+            printf("asign str: %s = %s\n", (yyvsp[-3].str), v->valor);
+            free((yyvsp[-1].str));
+        }
+#line 1172 "microbison.tab.c"
     break;
 
-  case 21: /* primaria: PAR_I expresion PAR_D  */
-#line 83 "microbison.y"
-                            { (yyval.num) = (yyvsp[-1].num); }
-#line 1186 "microbison.tab.c"
+  case 8: /* sentencia: LEER PAR_I listaIdentificadores PAR_D PYC  */
+#line 91 "microbison.y"
+        { printf("leer\n"); }
+#line 1178 "microbison.tab.c"
+    break;
+
+  case 9: /* sentencia: ESCRIBIR PAR_I strexpr PAR_D PYC  */
+#line 94 "microbison.y"
+          {
+            char* s = (yyvsp[-2].str);
+
+            if (s[0]=='"' && s[strlen(s)-1]=='"') {
+                s[strlen(s)-1] = 0;
+                printf("%s\n", s+1);
+            } else {
+                printf("%s\n", s);
+            }
+
+            free(s);
+        }
+#line 1195 "microbison.tab.c"
+    break;
+
+  case 10: /* sentencia: TIPO_INT ID PYC  */
+#line 108 "microbison.y"
+        {
+            Var* v = buscarVar((yyvsp[-1].str));
+            if (!v) v = crearVar((yyvsp[-1].str));
+            printf("decl int %s\n", (yyvsp[-1].str));
+        }
+#line 1205 "microbison.tab.c"
+    break;
+
+  case 11: /* sentencia: TIPO_STRING ID PYC  */
+#line 115 "microbison.y"
+        {
+            Var* v = buscarVar((yyvsp[-1].str));
+            if (!v) v = crearVar((yyvsp[-1].str));
+            printf("decl string %s\n", (yyvsp[-1].str));
+        }
+#line 1215 "microbison.tab.c"
+    break;
+
+  case 12: /* sentencia: CONST TIPO_INT ID ASIGN expresion PYC  */
+#line 122 "microbison.y"
+        {
+            Var* v = buscarVar((yyvsp[-3].str));
+            if (!v) v = crearVar((yyvsp[-3].str));
+            sprintf(v->valor, "%d", (yyvsp[-1].num));
+            printf("const int %s = %d\n", (yyvsp[-3].str), (yyvsp[-1].num));
+        }
+#line 1226 "microbison.tab.c"
+    break;
+
+  case 15: /* strexpr: STRING_LITERAL  */
+#line 137 "microbison.y"
+        { (yyval.str) = strdup((yyvsp[0].str)); }
+#line 1232 "microbison.tab.c"
+    break;
+
+  case 16: /* strexpr: PAR_I strexpr PAR_D  */
+#line 140 "microbison.y"
+        { (yyval.str) = (yyvsp[-1].str); }
+#line 1238 "microbison.tab.c"
+    break;
+
+  case 17: /* strexpr: strexpr strexpr  */
+#line 143 "microbison.y"
+        { 
+            char* tmp = malloc(strlen((yyvsp[-1].str))+strlen((yyvsp[0].str))+1);
+            strcpy(tmp, (yyvsp[-1].str));
+            strcat(tmp, (yyvsp[0].str));
+            free((yyvsp[-1].str));
+            free((yyvsp[0].str));
+            (yyval.str) = tmp;
+        }
+#line 1251 "microbison.tab.c"
+    break;
+
+  case 18: /* strexpr: LEER PAR_I PAR_D  */
+#line 153 "microbison.y"
+        {
+            char buffer[256];
+            printf("ingrese texto: ");
+            scanf(" %255[^\n]", buffer);
+            (yyval.str) = strdup(buffer);
+        }
+#line 1262 "microbison.tab.c"
+    break;
+
+  case 19: /* strexpr: ID  */
+#line 161 "microbison.y"
+        {
+            Var* v = buscarVar((yyvsp[0].str));
+            if (!v) (yyval.str) = strdup("");
+            else (yyval.str) = strdup(v->valor);
+        }
+#line 1272 "microbison.tab.c"
+    break;
+
+  case 21: /* expresion: expresion SUMA primaria  */
+#line 170 "microbison.y"
+                                { (yyval.num) = (yyvsp[-2].num) + (yyvsp[0].num); }
+#line 1278 "microbison.tab.c"
+    break;
+
+  case 22: /* expresion: expresion RESTA primaria  */
+#line 171 "microbison.y"
+                                { (yyval.num) = (yyvsp[-2].num) - (yyvsp[0].num); }
+#line 1284 "microbison.tab.c"
+    break;
+
+  case 23: /* primaria: ID  */
+#line 176 "microbison.y"
+        { 
+            Var* v = buscarVar((yyvsp[0].str));
+            if (!v) (yyval.num) = 0;
+            else (yyval.num) = atoi(v->valor);
+        }
+#line 1294 "microbison.tab.c"
+    break;
+
+  case 24: /* primaria: NUM  */
+#line 183 "microbison.y"
+        { (yyval.num) = (yyvsp[0].num); }
+#line 1300 "microbison.tab.c"
+    break;
+
+  case 25: /* primaria: PAR_I expresion PAR_D  */
+#line 186 "microbison.y"
+        { (yyval.num) = (yyvsp[-1].num); }
+#line 1306 "microbison.tab.c"
     break;
 
 
-#line 1190 "microbison.tab.c"
+#line 1310 "microbison.tab.c"
 
       default: break;
     }
@@ -1379,7 +1499,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 86 "microbison.y"
+#line 189 "microbison.y"
 
 
 void yyerror(const char *s){
