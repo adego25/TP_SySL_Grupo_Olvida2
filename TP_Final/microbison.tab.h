@@ -54,23 +54,23 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    TIPO_INT = 258,                /* TIPO_INT  */
-    TIPO_STRING = 259,             /* TIPO_STRING  */
-    CONST = 260,                   /* CONST  */
-    INICIO = 261,                  /* INICIO  */
-    FIN = 262,                     /* FIN  */
-    LEER = 263,                    /* LEER  */
-    ESCRIBIR = 264,                /* ESCRIBIR  */
-    ID = 265,                      /* ID  */
-    NUM = 266,                     /* NUM  */
-    STRING_LITERAL = 267,          /* STRING_LITERAL  */
-    ASIGN = 268,                   /* ASIGN  */
-    SUMA = 269,                    /* SUMA  */
-    RESTA = 270,                   /* RESTA  */
+    INICIO = 258,                  /* INICIO  */
+    FIN = 259,                     /* FIN  */
+    LEER = 260,                    /* LEER  */
+    ESCRIBIR = 261,                /* ESCRIBIR  */
+    TIPO_INT = 262,                /* TIPO_INT  */
+    TIPO_STRING = 263,             /* TIPO_STRING  */
+    CONST = 264,                   /* CONST  */
+    ASIGNACION = 265,              /* ASIGNACION  */
+    SUMA = 266,                    /* SUMA  */
+    RESTA = 267,                   /* RESTA  */
+    PAR_IZQ = 268,                 /* PAR_IZQ  */
+    PAR_DER = 269,                 /* PAR_DER  */
+    COMA = 270,                    /* COMA  */
     PYC = 271,                     /* PYC  */
-    COMA = 272,                    /* COMA  */
-    PAR_I = 273,                   /* PAR_I  */
-    PAR_D = 274                    /* PAR_D  */
+    CONST_INT = 272,               /* CONST_INT  */
+    CONST_LITERAL = 273,           /* CONST_LITERAL  */
+    ID = 274                       /* ID  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -79,7 +79,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 33 "microbison.y"
+#line 91 "microbison.y"
 
     int num;
     char* str;
